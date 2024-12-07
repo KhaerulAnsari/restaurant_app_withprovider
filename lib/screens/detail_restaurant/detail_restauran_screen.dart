@@ -63,7 +63,7 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
                     const SizedBox(
                       height: 10,
                     ),
-                    nameCityAndRating(restaurant, context),
+                    nameAddressCityAndRating(restaurant, context),
                     const SizedBox(
                       height: 8,
                     ),
@@ -174,7 +174,7 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
     );
   }
 
-  Row nameCityAndRating(
+  Row nameAddressCityAndRating(
       RestaurantDetailModel restaurant, BuildContext context) {
     return Row(
       children: [
@@ -201,6 +201,26 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
                   Expanded(
                     child: Text(
                       restaurant.address,
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    UniconsLine.building,
+                    color: TypografyStyle.mainColor,
+                  ),
+                  const SizedBox(
+                    width: 3,
+                  ),
+                  Expanded(
+                    child: Text(
+                      restaurant.city,
+                      maxLines: 1,
                     ),
                   )
                 ],
