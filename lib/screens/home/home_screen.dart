@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/static/restaurant_list_state.dart';
 import 'package:restaurant_app/provider/restaurant_list_provider.dart';
-import 'package:restaurant_app/provider/theme_provider.dart';
 import 'package:restaurant_app/routes/routes.dart';
 import 'package:restaurant_app/screens/home/card_list_restaurant.dart';
 import 'package:restaurant_app/style/typography/typografy_style.dart';
@@ -10,8 +9,9 @@ import 'package:restaurant_app/style/widgets/circular_progres.dart';
 import 'package:unicons/unicons.dart';
 
 class HomeScreen extends StatefulWidget {
-  final ValueChanged<ThemeMode> onThemeChanged;
-  const HomeScreen({super.key, required this.onThemeChanged});
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -28,8 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
@@ -41,7 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 35,
             ),
-            buttonChangeTheme(context, isDarkMode),
+            buttonSearch(
+              context,
+            ),
             const SizedBox(
               height: 25,
             ),
@@ -93,18 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Row buttonChangeTheme(BuildContext context, bool isDarkMode) {
+  Row buttonSearch(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          onPressed: () {
-            Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-          },
-          icon: Icon(
-            isDarkMode ? UniconsLine.sunset : UniconsLine.moonset,
-          ),
-        ),
+        const Spacer(),
         IconButton(
           onPressed: () {
             Navigator.pushNamed(

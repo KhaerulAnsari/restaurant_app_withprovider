@@ -15,5 +15,7 @@ class RestaurantListFailureState extends RestaurantListState {
 class RestaurantListLoadedState extends RestaurantListState {
   final List<RestaurantModel> data;
 
-  RestaurantListLoadedState(this.data);
+  RestaurantListLoadedState(
+    this.data,
+  );
 }

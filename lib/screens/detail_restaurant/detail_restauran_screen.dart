@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/models/restaurant_detail_model/restaurant_detail_model.dart';
+import 'package:restaurant_app/data/models/restaurant_list_model/restaurant_model.dart';
 import 'package:restaurant_app/data/models/restaurant_review_model/review_request_model.dart';
 import 'package:restaurant_app/data/static/restaurant_add_review_state.dart';
 import 'package:restaurant_app/data/static/restaurant_detail_state.dart';
 import 'package:restaurant_app/provider/restaurant_add_review_provider.dart';
 import 'package:restaurant_app/provider/restaurant_detail_provider.dart';
 import 'package:restaurant_app/screens/detail_restaurant/customer_review_card.dart';
+import 'package:restaurant_app/screens/favorite/favorite_icon_button.dart';
 import 'package:restaurant_app/style/typography/typografy_style.dart';
 import 'package:restaurant_app/style/widgets/circular_progres.dart';
 import 'package:restaurant_app/style/widgets/custom_button.dart';
@@ -16,8 +18,8 @@ import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:unicons/unicons.dart';
 
 class DetailRestaurantList extends StatefulWidget {
-  final String restaurntId;
-  const DetailRestaurantList({super.key, required this.restaurntId});
+  final String? id;
+  const DetailRestaurantList({super.key, this.id});
 
   @override
   State<DetailRestaurantList> createState() => _DetailRestaurantListState();
@@ -34,10 +36,10 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       context
           .read<RestaurantDetailProvider>()
-          .fetchRestaurantDetail(widget.restaurntId);
+          .fetchRestaurantDetail(widget.id!);
     });
   }
 
@@ -59,7 +61,7 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
                     const SizedBox(
                       height: 60,
                     ),
-                    imageAndButtonBack(restaurant, context),
+                    imageAndButtonBackFavorite(restaurant, context),
                     const SizedBox(
                       height: 10,
                     ),
@@ -105,7 +107,10 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
                       height: 8,
                     ),
 
-                    reviewAndAddReview(context, restaurant),
+                    reviewAndAddReview(
+                      context,
+                      restaurant,
+                    ),
 
                     const SizedBox(
                       height: 30,
@@ -123,7 +128,7 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
     );
   }
 
-  Stack imageAndButtonBack(
+  Stack imageAndButtonBackFavorite(
       RestaurantDetailModel restaurant, BuildContext context) {
     return Stack(
       children: [
@@ -146,29 +151,52 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
             ),
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            margin: const EdgeInsets.only(
-              left: 10,
-              top: 10,
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 8,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: TypografyStyle.mainColor.withOpacity(
-                0.6,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  top: 10,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: TypografyStyle.mainColor.withOpacity(
+                    0.6,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.arrow_back,
+                ),
               ),
             ),
-            child: const Icon(
-              Icons.arrow_back,
-            ),
-          ),
+
+            // Favorite Button
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 10,
+                top: 10,
+              ),
+              child: FavoriteIconButton(
+                restaurant: RestaurantModel(
+                  id: restaurant.id,
+                  name: restaurant.name,
+                  description: restaurant.description,
+                  pictureId: restaurant.pictureId,
+                  city: restaurant.city,
+                  rating: restaurant.rating,
+                ),
+              ),
+            )
+          ],
         ),
       ],
     );
@@ -320,7 +348,9 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
   }
 
   ConstrainedBox reviewAndAddReview(
-      BuildContext context, RestaurantDetailModel restaurant) {
+    BuildContext context,
+    RestaurantDetailModel restaurant,
+  ) {
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 300, maxHeight: 450),
       child: Container(
@@ -456,7 +486,7 @@ class _DetailRestaurantListState extends State<DetailRestaurantList> {
                             reviewController.clear();
                             context
                                 .read<RestaurantDetailProvider>()
-                                .fetchRestaurantDetail(widget.restaurntId);
+                                .fetchRestaurantDetail(widget.id!);
                             showDialog(
                               context: context,
                               barrierDismissible: false,

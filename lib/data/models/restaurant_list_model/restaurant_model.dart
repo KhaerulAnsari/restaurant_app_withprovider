@@ -25,4 +25,13 @@ class RestaurantModel {
       rating: (json['rating'] ?? 0).toDouble(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'description': description,
+        'pictureId': pictureId,
+        'city': city,
+        'rating': rating,
+      };
 }

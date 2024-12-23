@@ -10,9 +10,12 @@ import 'package:restaurant_app/data/models/restaurant_review_model/review_reques
 class RestaurantServices {
   static const _baseUrl = 'https://restaurant-api.dicoding.dev';
 
+  final http.Client client;
+  RestaurantServices({http.Client? client}) : client = client ?? http.Client();
+
   Future<RestaurantListModel> getListRestaurant() async {
     try {
-      final response = await http.get(
+      final response = await client.get(
         Uri.parse('$_baseUrl/list'),
       );
 
@@ -22,7 +25,7 @@ class RestaurantServices {
         throw Exception('Gagal memuat list restaurant.');
       }
     } catch (error) {
-      throw Exception(error);
+      throw Exception("Error : $error");
     }
   }
 

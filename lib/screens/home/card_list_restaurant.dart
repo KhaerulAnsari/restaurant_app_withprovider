@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/models/restaurant_list_model/restaurant_model.dart';
 import 'package:restaurant_app/routes/routes.dart';
+import 'package:restaurant_app/screens/favorite/favorite_icon_button.dart';
 import 'package:restaurant_app/style/typography/typografy_style.dart';
 import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:unicons/unicons.dart';
 
 class CardListRestaurant extends StatelessWidget {
   final RestaurantModel restaurant;
-  const CardListRestaurant({super.key, required this.restaurant});
+  final bool isFavorite;
+  const CardListRestaurant({
+    super.key,
+    required this.restaurant,
+    this.isFavorite = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +81,7 @@ class CardListRestaurant extends StatelessWidget {
                           Icon(
                             UniconsLine.building,
                             color: TypografyStyle.mainColor,
+                            size: isFavorite ? 18 : 22,
                           ),
                           const SizedBox(
                             width: 3,
@@ -94,7 +101,7 @@ class CardListRestaurant extends StatelessWidget {
                           )
                         ],
                       ),
-                      constraints.maxWidth <= 330
+                      (isFavorite == true || constraints.maxWidth <= 330)
                           ? Row(
                               children: [
                                 SmoothStarRating(
@@ -102,9 +109,10 @@ class CardListRestaurant extends StatelessWidget {
                                   rating: restaurant.rating!,
                                   color: TypografyStyle.mainColor,
                                   borderColor: TypografyStyle.mainColor,
+                                  size: isFavorite ? 18 : 22,
                                 ),
                                 const SizedBox(
-                                  height: 2,
+                                  width: 2,
                                 ),
                                 Expanded(
                                   child: Text(
@@ -117,8 +125,14 @@ class CardListRestaurant extends StatelessWidget {
                     ],
                   ),
                 ),
-                constraints.maxWidth <= 330
-                    ? const SizedBox()
+                SizedBox(
+                  width: isFavorite ? 8 : 0,
+                ),
+                (isFavorite == true || constraints.maxWidth <= 330)
+                    ? FavoriteIconButton(
+                        restaurant: restaurant,
+                        sizeIcon: 28,
+                      )
                     : Row(
                         children: [
                           const SizedBox(
